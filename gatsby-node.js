@@ -53,7 +53,8 @@ exports.onPostBuild = async () => {
 
   if (count < INC_BUILD_LIMIT) {
     const result = await fetch(WEBHOOK_URL, {method: `POST`})
-    if (result.status !== 200) {
+    const okStatuses = [200, 204]
+    if (!okStatuses.includes(result.status)) {
       throw new Error(`Unexpected webhook HTTP status: ${result.status}`)
     }
   } else {
