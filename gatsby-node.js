@@ -54,6 +54,7 @@ exports.onPostBuild = async () => {
 
   if (buildNumber < INC_BUILD_LIMIT) {
     const okStatuses = [200, 204]
+    const result = await triggerWebhook()
     if (!okStatuses.includes(result.status)) {
       throw new Error(`Unexpected webhook HTTP status: ${result.status}`)
     }
@@ -62,4 +63,17 @@ exports.onPostBuild = async () => {
     console.log(`TOTAL_PAGES: ${totalPages}`)
   }
   totalPages += INC_BUILD_NEW_PAGES
+}
+
+async function triggerWebhook(attempt = 1) {
+  try {
+    return await fetch(WEBHOOK_URL, {method: `POST`})
+  } catch (e) {
+    if (attempt > 3) {
+      throw e
+    }
+    return new Promise(resolve => {
+      setTimeout(() => resolve(triggerWebhook(attempt + 1)), 5000)
+    })
+  }
 }
