@@ -1,11 +1,12 @@
-const NUM_PAGES = parseInt(process.env.NUM_PAGES || 100, 10)
+const NUM_PAGES = parseInt(process.env.NUM_PAGES || 1000, 10)
 const WEBHOOK_URL = process.env.WEBHOOK_URL || `http://localhost:8000/__refresh`
 const INC_BUILD_LIMIT = Number(process.env.INC_BUILD_LIMIT) || 0
 const INC_BUILD_NEW_PAGES = Number(process.env.INC_BUILD_NEW_PAGES) || 0
+const INC_BUILD_UPDATE_ALL_PAGES = Number(process.env.INC_BUILD_UPDATE_ALL_PAGES) || 0
 const template = require(`./page-template`)
 const fetch = require(`node-fetch`)
 
-let count = 0
+let buildNumber = 0
 let totalPages = NUM_PAGES
 
 exports.sourceNodes = ({ actions: { createNode } }) => {
@@ -19,7 +20,7 @@ exports.sourceNodes = ({ actions: { createNode } }) => {
         type: `FakeMarkdown`,
         mediaType: `text/markdown`,
         content: template(step),
-        contentDigest: step.toString(),
+        contentDigest: INC_BUILD_UPDATE_ALL_PAGES ? buildNumber.toString() : step.toString(),
       },
     })
   }
@@ -47,12 +48,11 @@ exports.onPostBuild = async () => {
   console.log(`INC_BUILD_NEW_PAGES: ${INC_BUILD_NEW_PAGES}`)
   console.log(``)
 
-  count++
-  console.log(`CURRENT BUILD: ${count}`)
+  buildNumber++
+  console.log(`CURRENT BUILD: ${buildNumber}`)
   console.log(process.memoryUsage())
 
-  if (count < INC_BUILD_LIMIT) {
-    const result = await fetch(WEBHOOK_URL, {method: `POST`})
+  if (buildNumber < INC_BUILD_LIMIT) {
     const okStatuses = [200, 204]
     if (!okStatuses.includes(result.status)) {
       throw new Error(`Unexpected webhook HTTP status: ${result.status}`)
