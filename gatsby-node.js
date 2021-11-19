@@ -46,6 +46,7 @@ exports.onPostBuild = async () => {
   console.log(`WEBHOOK_URL: ${WEBHOOK_URL}`)
   console.log(`INC_BUILD_LIMIT: ${INC_BUILD_LIMIT}`)
   console.log(`INC_BUILD_NEW_PAGES: ${INC_BUILD_NEW_PAGES}`)
+  console.log(`INC_BUILD_UPDATE_ALL_PAGES: ${INC_BUILD_UPDATE_ALL_PAGES}`)
   console.log(``)
 
   buildNumber++

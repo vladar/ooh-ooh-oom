@@ -1,0 +1,19 @@
+diff --git a/node_modules/gatsby-cli/lib/reporter/redux/reducers/logs.js b/node_modules/gatsby-cli/lib/reporter/redux/reducers/logs.js
+index 1edbe85..77187de 100644
+--- a/node_modules/gatsby-cli/lib/reporter/redux/reducers/logs.js
++++ b/node_modules/gatsby-cli/lib/reporter/redux/reducers/logs.js
+@@ -24,10 +24,10 @@ const reducer = (state = {
+           // set empty character to fix ink
+           action.payload.text = `\u2800`;
+         }
+-
+-        return { ...state,
+-          messages: [...state.messages, action.payload]
+-        };
++        return state;
++        // return { ...state,
++        //   messages: [...state.messages, action.payload]
++        // };
+       }
+ 
+     case _constants.Actions.StartActivity:
