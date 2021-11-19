@@ -8,7 +8,8 @@
     "develop": "gatsby develop",
     "build": "gatsby build",
     "data-update": "ts-node scripts/data-update.ts",
-    "serve": "gatsby serve"
+    "serve": "gatsby serve",
+    "postinstall": "patch-package"
   },
   "dependencies": {
     "faker": "^4.1.0",
